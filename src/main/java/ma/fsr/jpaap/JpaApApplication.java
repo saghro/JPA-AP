@@ -22,9 +22,11 @@ public class JpaApApplication implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
-    patientRepository.save(new Patient(null, "yuba",new Date() ,false ,233));
-    patientRepository.save(new Patient(null, "sara",new Date() ,true ,453));
-    patientRepository.save(new Patient(null, "brahim",new Date() ,true ,87));
+    for (int i = 0; i <100 ; i++) {
+      patientRepository.save(new Patient(null, "yuba",new Date() ,false ,(int)(Math.random()*100)));
+
+    }
+
     List<Patient> patients = patientRepository.findAll();
        patients.forEach(patient -> {
          System.out.println(patient.getId());
@@ -39,5 +41,8 @@ public class JpaApApplication implements CommandLineRunner {
          System.out.println(p.getNom());
          System.out.println(p.isMalade());
        }
+       p.setScore(8788);
+       patientRepository.save(p);
+       patientRepository.deleteById(2L);
   }
 }
