@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import javax.sound.midi.Soundbank;
 import java.sql.SQLOutput;
@@ -23,12 +25,18 @@ public class JpaApApplication implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
     for (int i = 0; i <100 ; i++) {
-      patientRepository.save(new Patient(null, "yuba",new Date() ,false ,(int)(Math.random()*100)));
+      patientRepository.save(new Patient(null, "yuba",new Date() ,Math.random()>0.5?true:false ,(int)(Math.random()*100)));
 
     }
 
-    List<Patient> patients = patientRepository.findAll();
-       patients.forEach(patient -> {
+    Page<Patient> patients = patientRepository.findAll(PageRequest.of(1,5));
+    System.out.println("Total pages :" +patients.getTotalPages());
+    System.out.println("Total element :" +patients.getTotalElements());
+    System.out.println("num pages :" +patients.getNumber());
+    List<Patient> content = patients.getContent();
+    Page<Patient> byMalade = patientRepository.findByMalade( true,PageRequest.of(0,10));
+    List<Patient> patientList = patientRepository.chercherPatient("%y%" ,30);
+    byMalade.forEach(patient -> {
          System.out.println(patient.getId());
          System.out.println(patient.getNom());
          System.out.println(patient.getDateNaissance());
